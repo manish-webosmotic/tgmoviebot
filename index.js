@@ -2,8 +2,12 @@ import fs from 'fs';
 import dotenv from 'dotenv';
 import { Input, Telegraf } from 'telegraf';
 import { message } from 'telegraf/filters';
+import express from 'express';
 
 dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT || 3000;
 const TOKEN = process.env.BOT_TOKEN;
 const GROUP_ID = process.env.GROUP_ID;
 if (!TOKEN || !GROUP_ID) {
@@ -13,6 +17,9 @@ if (!TOKEN || !GROUP_ID) {
 const bot = new Telegraf(TOKEN);
 const filesPath = './db.json';
 const fileName = 'db.json';
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 const readFiles = () => {
 	if (!fs.existsSync(filesPath)) {
@@ -99,6 +106,13 @@ bot.command('list', async (ctx) => {
     await ctx.reply('Available movies:\n\n' + movieList.join('\n'));
 });
 
-bot.launch(() => {
-	console.log('Bot is running...');
+app.get('/', (req, res) => {
+    res.send('Movie Bot API is running!');
+});
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+	bot.launch(() => {
+		console.log('Bot is running...');
+	});
 });
