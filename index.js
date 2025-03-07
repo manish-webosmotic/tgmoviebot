@@ -25,6 +25,10 @@ const writeFiles = (files) => {
 	fs.writeFileSync(filesPath, JSON.stringify(files, null, 4));
 };
 
+bot.start((ctx) => ctx.reply('Welcome to Movie Bot! 🎬\n\nI can help you to retrieve movies.\n\nUse /help to see available commands.'));
+
+bot.help((ctx) => ctx.reply('Available commands:\n\n/movie [name] - Search and get a movie\n/help - Show this help message\n/list - To see all avaiable movies'));
+
 bot.on(message('video'), async (ctx) => {
 	if (ctx?.message?.chat?.id === GROUP_ID) {
 		const message = ctx?.message;
